@@ -5,12 +5,14 @@ namespace App\Form;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 class RegisterUserType extends AbstractType
 {
@@ -25,6 +27,10 @@ class RegisterUserType extends AbstractType
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
+                'constraints' => new Length([
+                    'min' => 4,
+                    'max' => 15
+                ]),
                 'first_options'  => [
                     'label' => 'Votre mot de passe',
                     'attr' => [
@@ -42,12 +48,20 @@ class RegisterUserType extends AbstractType
             ])
             ->add('firstname', TextType::class, [
                 'label' => 'Votre prénom',
+                'constraints' => new Length([
+                    'min' => 2,
+                    'max' => 10
+                ]),
                 'attr' => [
                     'placeholder' => 'Indiquez votre prénom'
                 ]
             ])
             ->add('lastname', TextType::class, [
                 'label' => 'Votre nom',
+                'constraints' => new Length([
+                    'min' => 2,
+                    'max' => 20
+                ]),
                 'attr' => [
                     'placeholder' => 'Indiquez votre nom'
                 ]
@@ -65,6 +79,9 @@ class RegisterUserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'constraints' => [
+                new UniqueEntity(fields: ['email']), //['fields' => ['email', 'username']]
+            ],
         ]);
     }
 }
