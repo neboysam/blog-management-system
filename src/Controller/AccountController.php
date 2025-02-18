@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Form\ModifyPasswordType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -17,32 +18,40 @@ final class AccountController extends AbstractController{
     }
 
     #[Route('/compte/modifier-mot-de-passe-controller', name: 'app_account_modify_password_controller')]
-    public function modifyPasswordController(Request $request, UserPasswordHasherInterface $passwordHasher): Response
+    public function modifyPasswordController(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
     {
         //get encrypted password from current user (database)
         $user = $this->getUser();
-        $userEncryptedPassword = $user->getPassword();
+        //current user password from db, encrypted
+        $currentDatabasePassword = $user->getPassword();
 
         $form = $this->createForm(ModifyPasswordType::class, $user);
 
-        //dd($form->get('currentPassword')->getData());
+        //dd($form->get('currentPassword')->getData()); //value is null before handleRequest($request)
 
-        //get current password (in plain text) from form
         $form->handleRequest($request);
-        $currentPlainPassword = $form->get('currentPassword')->getData();
-        
-        //dd($currentPlainPassword);
+        //dd($user);
+
+        //get current password (in plain text) from form, not it has value
+        $currentPlainTextPassword = $form->get('currentPassword')->getData();
 
         //get new password (in plain text) from form (only after handleRequest($request))
-        $newPlainPassword = $form->getData()->getPassword();
+        $newPlainTextPassword = $form->getData()->getPassword();
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($passwordHasher->isPasswordValid($user, $currentPlainPassword)) {
+            //dd($currentDatabasePassword);
+            $user->setPassword($currentDatabasePassword);
+            if ($passwordHasher->isPasswordValid($user, $currentPlainTextPassword)) {
                 $newHashedPassword = $passwordHasher->hashPassword(
                     $user,
-                    $newPlainPassword
+                    $newPlainTextPassword
                 );
-                dd($newHashedPassword);
+                $user->setPassword($newHashedPassword);
+
+                $entityManager->flush();
+
+                $this->addFlash('success', "Le mot de passe vient d'etre modifier");
+                return $this->redirectToRoute('app_account');
             }
         }
 
