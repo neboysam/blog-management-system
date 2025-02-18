@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Form\ModifyPasswordType;
+use App\Form\ModifyPasswordTemplateType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,6 +23,7 @@ final class AccountController extends AbstractController{
     {
         //get encrypted password from current user (database)
         $user = $this->getUser();
+
         //current user password from db, encrypted
         $currentDatabasePassword = $user->getPassword();
 
@@ -30,29 +32,32 @@ final class AccountController extends AbstractController{
         //dd($form->get('currentPassword')->getData()); //value is null before handleRequest($request)
 
         $form->handleRequest($request);
-        //dd($user);
 
-        //get current password (in plain text) from form, not it has value
+        //get current password value (in plain text) from form
         $currentPlainTextPassword = $form->get('currentPassword')->getData();
 
         //get new password (in plain text) from form (only after handleRequest($request))
-        $newPlainTextPassword = $form->getData()->getPassword();
+        $newPlainTextPassword = $form->get('plainPassword')->getData();
 
         if ($form->isSubmitted() && $form->isValid()) {
-            //dd($currentDatabasePassword);
             $user->setPassword($currentDatabasePassword);
+            
             if ($passwordHasher->isPasswordValid($user, $currentPlainTextPassword)) {
                 $newHashedPassword = $passwordHasher->hashPassword(
                     $user,
                     $newPlainTextPassword
                 );
-                $user->setPassword($newHashedPassword);
+            } else {
+                    $this->addFlash('info', "Le mot de passe ne pouvait pas etre modifiee");
+                    return $this->redirectToRoute('app_account_modify_password_controller');
+              };
 
-                $entityManager->flush();
+            $user->setPassword($newHashedPassword);
 
-                $this->addFlash('success', "Le mot de passe vient d'etre modifier");
-                return $this->redirectToRoute('app_account');
-            }
+            $entityManager->flush();
+
+            $this->addFlash('success', "Le mot de passe vient d'etre modifiee");
+            return $this->redirectToRoute('app_account');            
         }
 
         return $this->render('account/modify_password.html.twig', [
@@ -61,12 +66,22 @@ final class AccountController extends AbstractController{
     }
 
     #[Route('/compte/modifier-mot-de-passe-template', name: 'app_account_modify_password_template')]
-    public function modifyPasswordTemplate(): Response
+    public function modifyPasswordTemplate(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
-        $form = $this->createForm(ModifyPasswordType::class);
+        $user = $this->getUser();
+        dd($user);
+        $form = $this->createForm(ModifyPasswordTemplateType::class, $user, [
+            'passwordHasher' => $passwordHasher
+        ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+        }
 
         return $this->render('account/modify_password.html.twig', [
-            'modifyPasswordForm' => $form->createView()
+            'modifyPasswordTemplateForm' => $form->createView()
         ]);
     }
 }

@@ -196,7 +196,11 @@
 						<a href="#" class="mx-2" style="text-decoration: none;">
 							<i data-feather="user"></i>John Doe
 						</a>
-						<a class="btn btn-sm btn-outline-secondary" href="#">Sign up</a>
+						{% if is_granted('ROLE_USER') %}
+							<a class="btn btn-sm btn-outline-secondary" href="{{ path('app_logout') }}">Deconnexion</a>
+						{% else %}
+							<a class="btn btn-sm btn-outline-secondary" href="{{ path('app_login') }}">Connexion</a>
+						{% endif %}
 					</div>
 				</div>
 			</header>
