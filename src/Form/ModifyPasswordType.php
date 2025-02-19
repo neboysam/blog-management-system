@@ -28,16 +28,16 @@ class ModifyPasswordType extends AbstractType
                     'max' => 15
                 ]),
                 'first_options'  => [
-                    'label' => 'Votre mot de passe',
+                    'label' => 'Votre nouveau mot de passe',
                     'attr' => [
-                        'placeholder' => 'Indiquez votre mot de passe'
+                        'placeholder' => 'Indiquez votre nouveau mot de passe'
                     ],
                     'hash_property_path' => 'password'
                 ],
                 'second_options' => [
-                    'label' => 'Confirmez votre mot de passe',
+                    'label' => 'Confirmez votre nouveau mot de passe',
                     'attr' => [
-                        'placeholder' => 'Confirmez votre mot de passe'
+                        'placeholder' => 'Confirmez votre nouveau mot de passe'
                     ],
                 ],
                 'mapped' => false,

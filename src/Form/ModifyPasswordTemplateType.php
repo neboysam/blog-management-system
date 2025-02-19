@@ -8,9 +8,11 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Event\SubmitEvent;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 
 class ModifyPasswordTemplateType extends AbstractType
 {
@@ -20,24 +22,40 @@ class ModifyPasswordTemplateType extends AbstractType
             ->add('currentPassword', PasswordType::class, [
                 'mapped' => false
             ])
-            ->add('password', PasswordType::class, [
-                'label' => "New Password"
+            ->add('plainPassword', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'constraints' => new Length([
+                    'min' => 4,
+                    'max' => 15
+                ]),
+                'first_options'  => [
+                    'label' => 'Votre nouveau mot de passe',
+                    'attr' => [
+                        'placeholder' => 'Indiquez votre nouveau mot de passe'
+                    ],
+                    'hash_property_path' => 'password'
+                ],
+                'second_options' => [
+                    'label' => 'Confirmez votre nouveau mot de passe',
+                    'attr' => [
+                        'placeholder' => 'Confirmez votre nouveau mot de passe'
+                    ],
+                ],
+                'mapped' => false,
             ])
             ->add('submit', SubmitType::class)
             ->addEventListener(FormEvents::SUBMIT, function(SubmitEvent $event): void {
-                $user = $event->getData();
-                $form = $event->getForm();
-                $user = $form->getConfig()->getOptions()['data'];
-                //dd($user->getPassword()); //12345
-                //dd($user);
-                /* $passwordHasher = $form->getConfig()->getOptions()['passwordHasher'];
+                //$user = $event->getData(); //user from db
+                $form = $event->getForm(); 
+                $userFromDatabase = $form->getConfig()->getOptions()['data']; //identical to $event->getData()
+                $passwordHasher = $form->getConfig()->getOptions()['passwordHasher'];
                 $currentDatabasePlainTextPassword = $form->get('currentPassword')->getData(); //plain text password from form
 
-                $isValid = $passwordHasher->isPasswordValid($user, $currentDatabasePlainTextPassword);
+                $isValid = $passwordHasher->isPasswordValid($userFromDatabase, $currentDatabasePlainTextPassword);
 
                 if (!$isValid) {
                     $form->get('currentPassword')->addError(new FormError("Votre mot de passe actuel n'est pas conforme. Veuillez verifier votre saisie."));
-                } */
+                }
             })
         ;
     }

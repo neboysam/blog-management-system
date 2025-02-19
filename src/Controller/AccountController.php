@@ -23,6 +23,7 @@ final class AccountController extends AbstractController{
     {
         //get encrypted password from current user (database)
         $user = $this->getUser();
+        //dd($user); //current encrypted user password
 
         //current user password from db, encrypted
         $currentDatabasePassword = $user->getPassword();
@@ -30,13 +31,17 @@ final class AccountController extends AbstractController{
         $form = $this->createForm(ModifyPasswordType::class, $user);
 
         //dd($form->get('currentPassword')->getData()); //value is null before handleRequest($request)
+        //dd($user); //current encrypted user password
+        //dd($form->getData()); //current encrypted user password
 
         $form->handleRequest($request);
+        //dd($user); //new encrypted user password
+        //dd($form->getData()); //new encrypted user password
 
         //get current password value (in plain text) from form
         $currentPlainTextPassword = $form->get('currentPassword')->getData();
 
-        //get new password (in plain text) from form (only after handleRequest($request))
+        //get new password (in plain text) from form
         $newPlainTextPassword = $form->get('plainPassword')->getData();
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -66,10 +71,11 @@ final class AccountController extends AbstractController{
     }
 
     #[Route('/compte/modifier-mot-de-passe-template', name: 'app_account_modify_password_template')]
-    public function modifyPasswordTemplate(Request $request, UserPasswordHasherInterface $passwordHasher): Response
+    public function modifyPasswordTemplate(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
-        dd($user);
+        //dd($user); //current encrypted user password from database
+        
         $form = $this->createForm(ModifyPasswordTemplateType::class, $user, [
             'passwordHasher' => $passwordHasher
         ]);
@@ -77,11 +83,14 @@ final class AccountController extends AbstractController{
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
 
+            $this->addFlash('success', "Le mot de passe vient d'etre modifiee");
+            return $this->redirectToRoute('app_account');
         }
 
         return $this->render('account/modify_password.html.twig', [
-            'modifyPasswordTemplateForm' => $form->createView()
+            'modifyPasswordForm' => $form->createView()
         ]);
     }
 }
