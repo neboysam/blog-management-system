@@ -53,7 +53,7 @@ final class AccountController extends AbstractController{
                     $newPlainTextPassword
                 );
             } else {
-                    $this->addFlash('info', "Le mot de passe ne pouvait pas etre modifiee");
+                    $this->addFlash('info', "Password could not be updated");
                     return $this->redirectToRoute('app_account_modify_password_controller');
               };
 
@@ -61,7 +61,7 @@ final class AccountController extends AbstractController{
 
             $entityManager->flush();
 
-            $this->addFlash('success', "Le mot de passe vient d'etre modifiee");
+            $this->addFlash('success', "Your password has just been modified");
             return $this->redirectToRoute('app_account');            
         }
 
@@ -85,7 +85,7 @@ final class AccountController extends AbstractController{
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            $this->addFlash('success', "Le mot de passe vient d'etre modifiee");
+            $this->addFlash('success', "Your password has just been updated");
             return $this->redirectToRoute('app_account');
         }
 

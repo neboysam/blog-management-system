@@ -197,9 +197,9 @@
 							<i data-feather="user"></i>John Doe
 						</a>
 						{% if not app.user %}
-							<a class="btn btn-sm btn-outline-secondary" href="{{ path('app_logout') }}">Connexion</a>
+							<a class="btn btn-sm btn-outline-secondary" href="{{ path('app_login') }}">Connexion</a>
 						{% else %}
-							<a class="btn btn-sm btn-outline-secondary" href="{{ path('app_login') }}">Deconnexion</a>
+							<a class="btn btn-sm btn-outline-secondary" href="{{ path('app_logout') }}">Deconnexion</a>
 						{% endif %}
 					</div>
 				</div>

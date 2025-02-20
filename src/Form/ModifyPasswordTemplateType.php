@@ -46,7 +46,7 @@ class ModifyPasswordTemplateType extends AbstractType
             ->add('submit', SubmitType::class)
             ->addEventListener(FormEvents::SUBMIT, function(SubmitEvent $event): void {
                 //$user = $event->getData(); //user from db
-                $form = $event->getForm(); 
+                $form = $event->getForm();
                 $userFromDatabase = $form->getConfig()->getOptions()['data']; //identical to $event->getData()
                 $passwordHasher = $form->getConfig()->getOptions()['passwordHasher'];
                 $currentDatabasePlainTextPassword = $form->get('currentPassword')->getData(); //plain text password from form
