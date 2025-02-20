@@ -2,17 +2,17 @@
 
 {% block body %}
     <div class="container w-50 mx-auto">
-        <h1 class="text-center">Connexion</h1>
+        <h1 class="text-center">Login</h1>
         <form action="{{ path('app_login') }}" method="POST">
-            <label for="username">Votre adresse email :</label>
+            <label for="username">Your email address:</label>
             <input type="text" class="form-control mb-4" id="username" name="_username" value="{{ last_username }}" required>
 
-            <label for="password">Votre mot de passe :</label>
+            <label for="password">Your password:</label>
             <input type="password" class="form-control" id="password" name="_password" required>
 
             <input type="hidden" name="_target_path" value="{{ path('app_account') }}">
 
-            <button type="submit" class="btn btn-success my-4 w-100">Connexion</button>
+            <button type="submit" class="btn btn-success my-4 w-100">Log In</button>
         </form>
     </div>
 {% endblock %}

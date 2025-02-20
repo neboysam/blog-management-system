@@ -20,9 +20,9 @@ class RegisterUserType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, [
-                'label' => 'Votre adresse email',
+                'label' => 'Your email addresse',
                 'attr' => [
-                    'placeholder' => 'Indiquez votre adresse email'
+                    'placeholder' => 'Enter your email addresse'
                 ]
             ])
             ->add('plainPassword', RepeatedType::class, [
@@ -32,42 +32,42 @@ class RegisterUserType extends AbstractType
                     'max' => 15
                 ]),
                 'first_options'  => [
-                    'label' => 'Votre mot de passe',
+                    'label' => 'Your password',
                     'attr' => [
-                        'placeholder' => 'Indiquez votre mot de passe'
+                        'placeholder' => 'Enter your password'
                     ],
                     'hash_property_path' => 'password'
                 ],
                 'second_options' => [
-                    'label' => 'Confirmez votre mot de passe',
+                    'label' => 'Confirm your password',
                     'attr' => [
-                        'placeholder' => 'Confirmez votre mot de passe'
+                        'placeholder' => 'Confirm your password'
                     ],
                 ],
                 'mapped' => false,
             ])
             ->add('firstname', TextType::class, [
-                'label' => 'Votre prénom',
+                'label' => 'Your name',
                 'constraints' => new Length([
                     'min' => 2,
                     'max' => 10
                 ]),
                 'attr' => [
-                    'placeholder' => 'Indiquez votre prénom'
+                    'placeholder' => 'Enter your name'
                 ]
             ])
             ->add('lastname', TextType::class, [
-                'label' => 'Votre nom',
+                'label' => 'Your surname',
                 'constraints' => new Length([
                     'min' => 2,
                     'max' => 20
                 ]),
                 'attr' => [
-                    'placeholder' => 'Indiquez votre nom'
+                    'placeholder' => 'Enter your surname'
                 ]
             ])
             ->add('submit', SubmitType::class, [
-                'label' => 'Valider',
+                'label' => 'Submit',
                 'attr' => [
                     'class' => 'btn btn-success'
                 ]

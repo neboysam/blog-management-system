@@ -12,13 +12,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 final class AccountController extends AbstractController{
-    #[Route('/compte', name: 'app_account')]
+    #[Route('/account', name: 'app_account')]
     public function index(): Response
     {
         return $this->render('account/account.html.twig');
     }
 
-    #[Route('/compte/modifier-mot-de-passe-controller', name: 'app_account_modify_password_controller')]
+    #[Route('/account/update-password-controller', name: 'app_account_modify_password_controller')]
     public function modifyPasswordController(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
     {
         //get encrypted password from current user (database)
@@ -70,7 +70,7 @@ final class AccountController extends AbstractController{
         ]);
     }
 
-    #[Route('/compte/modifier-mot-de-passe-template', name: 'app_account_modify_password_template')]
+    #[Route('/account/update-password-template', name: 'app_account_modify_password_template')]
     public function modifyPasswordTemplate(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
