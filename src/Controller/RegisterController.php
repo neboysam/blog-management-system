@@ -15,18 +15,16 @@ final class RegisterController extends AbstractController{
     public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
-        //dd($request);
         $form = $this->createForm(RegisterUserType::class, $user);
 
         $form->handleRequest($request);
-        //dd($request);
         //dd($form->getData());
         //dd($user);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            //dd($request);
             //dd($form->getData()); the same content as $form->getData() on line 23
             //dd($user); the same content as $user on line 24
+            $user->setRoles(['ROLE_USER']);
             $entityManager->persist($user);
             $entityManager->flush();
         }
