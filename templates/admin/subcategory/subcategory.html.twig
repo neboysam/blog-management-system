@@ -1,31 +1,20 @@
 {% extends 'base-admin.html.twig' %}
 
-{% block title %}Subcategories
+{% block title %}All Subcategories
 {% endblock %}
 
 {% block body %}
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-12">
-				<h1 class="page-header">Subcategories</h1>
-
-				<div class="col-xs-6">
-					<form action="" method="post">
-						<div class="form-group">
-							<label for="cat-title">Add Subcategory</label>
-							<input type="text" name="" class="form-control">
-						</div>
-						<div class="form-group">
-							<input type="submit" name="" class="btn btn-primary" value="Add Subcategory">
-						</div>
-					</form>
-				</div>
-				<div class="col-xs-6">
-					<table class="table table-bordered table-hover">
+				<h1 class="page-header my-3 text-center">List of Subcategories</h1>
+					<table class="table table-bordered table-striped table-hover">
 						<thead>
 							<tr>
 								<th>ID</th>
 								<th>Title</th>
+								<th>Category</th>
+								<th>Description</th>
 								<th>Delete</th>
 								<th>Edit</th>
 							</tr>
@@ -34,16 +23,17 @@
 							<tr>
 								<td>ID</td>
 								<td>Title</td>
+								<td>Category</td>
+								<td>Description</td>
 								<td>
-									<a href="">Delete</a>
+									<a href="" class="btn btn-info btn-sm">Edit</a>
 								</td>
 								<td>
-									<a href="">Edit</a>
+									<a href="" class="btn btn-danger btn-sm">Delete</a>
 								</td>
 							</tr>
 						</tbody>
 					</table>
-				</div>
 			</div>
 		</div>
 	</div>
