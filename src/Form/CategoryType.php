@@ -27,7 +27,7 @@ class CategoryType extends AbstractType
                 ]
             ])
             ->add('submit', SubmitType::class, [
-                'label' => 'Add Category',
+                'label' => 'Submit',
                 'attr' => [
                     'class' => 'btn btn-success'
                 ]

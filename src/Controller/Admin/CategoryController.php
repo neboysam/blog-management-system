@@ -21,10 +21,20 @@ final class CategoryController extends AbstractController{
         ]);
     }
 
-    #[Route('/admin/add-category', name: 'app_admin_add_category')]
-    public function addCategory(Request $request, EntityManagerInterface $entityManager): Response
+    //create new or update existing category
+    #[Route('/admin/category/add-or-update/{id}', name: 'app_admin_add_update_category', defaults: ['id' => null] )]
+    public function modifyCategory(Request $request, $id, CategoryRepository $categoryRepository, EntityManagerInterface $entityManager): Response
     {
-        $category = new Category();
+        if (!$id) {
+            $category = new Category();
+            $headingTitle = 'Create Category';
+            $addFlashLabel = true;
+        } else {
+            $category = $categoryRepository->findOneById($id);
+            $headingTitle = 'Update Category';
+            $addFlashLabel = false;
+        }
+        
         $form = $this->createForm(CategoryType::class, $category);
 
         $form->handleRequest($request);
@@ -33,12 +43,18 @@ final class CategoryController extends AbstractController{
             $entityManager->persist($category);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Category ' . "'" . $category->getTitle() . "'" . ' is added successfully.');
+            if ($addFlashLabel) {
+                $label = 'created';
+            } else {
+                $label = 'updated';
+            }
+            $this->addFlash('success', 'Category ' . "'" . $category->getTitle() . "'" . ' is ' . $label . ' successfully.');
             return $this->redirectToRoute('app_admin_categories');
         } 
         
-        return $this->render('admin/category/add-category.html.twig', [
-            'categoryForm' => $form->createView()
+        return $this->render('admin/category/add-or-update-category.html.twig', [
+            'categoryForm' => $form->createView(),
+            'headingTitle' => $headingTitle
         ]);
     }
 }
