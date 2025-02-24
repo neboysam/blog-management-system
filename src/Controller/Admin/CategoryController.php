@@ -12,18 +12,23 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class CategoryController extends AbstractController{
+    private $entityManager;
+    public function __construct(EntityManagerInterface $entityManager) {
+        $this->entityManager = $entityManager;
+    }
+
     #[Route('/admin/categories', name: 'app_admin_categories')]
     public function showCategories(CategoryRepository $categoryRepo): Response
     {
         $categories = $categoryRepo->findAll();
-        return $this->render('admin/category/category.html.twig', [
+        return $this->render('admin/category/categories.html.twig', [
             'categories' => $categories
         ]);
     }
 
     //create new or update existing category
     #[Route('/admin/category/add-or-update/{id}', name: 'app_admin_add_update_category', defaults: ['id' => null] )]
-    public function modifyCategory(Request $request, $id, CategoryRepository $categoryRepository, EntityManagerInterface $entityManager): Response
+    public function modifyCategory(Request $request, $id, CategoryRepository $categoryRepository): Response
     {
         if (!$id) {
             $category = new Category();
@@ -40,8 +45,8 @@ final class CategoryController extends AbstractController{
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($category);
-            $entityManager->flush();
+            $this->entityManager->persist($category);
+            $this->entityManager->flush();
 
             if ($addFlashLabel) {
                 $label = 'created';
@@ -56,5 +61,15 @@ final class CategoryController extends AbstractController{
             'categoryForm' => $form->createView(),
             'headingTitle' => $headingTitle
         ]);
+    }
+
+    #[Route('/admin/category/delete/{id}', name: 'app_admin_delete_category')]
+    public function deleteCategory($id, CategoryRepository $categoryRepo): Response
+    {
+        $category = $categoryRepo->findOneById($id);
+
+        $this->entityManager->remove($category);
+
+        return $this->render('admin/category/categories.html.twig');
     }
 }
