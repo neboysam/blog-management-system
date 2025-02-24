@@ -16,14 +16,15 @@
 				{% endfor %}
 
 				<h1 class="page-header my-3 text-center">List of Categories</h1>
+				<a href="{{ path('app_admin_add_update_category') }}" class="btn btn-success btn-sm mb-3 float-end">Add Category</a>
 				<table class="table table-bordered table-striped table-hover">
 					<thead>
 						<tr>
 							<th>ID</th>
 							<th>Title</th>
 							<th>Description</th>
-							<th>Delete</th>
 							<th>Edit</th>
+							<th>Delete</th>
 						</tr>
 					</thead>
 					<tbody>

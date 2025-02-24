@@ -16,6 +16,11 @@ class SubcategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, Subcategory::class);
     }
 
+    public function findAllWithPagination() {
+        return $this->createQueryBuilder('s')
+            ->getQuery();
+    }
+
 //    /**
 //     * @return Subcategory[] Returns an array of Subcategory objects
 //     */

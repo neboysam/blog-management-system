@@ -29,7 +29,7 @@ class CategoryType extends AbstractType
             ->add('submit', SubmitType::class, [
                 'label' => 'Submit',
                 'attr' => [
-                    'class' => 'btn btn-success'
+                    'class' => 'btn btn-success w-100'
                 ]
             ])
         ;
